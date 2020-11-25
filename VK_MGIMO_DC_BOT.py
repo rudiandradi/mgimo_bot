@@ -13,7 +13,7 @@ import random
 # In[2]:
 
 
-themes = pd.read_csv(r'C:\Users\Сергей\Desktop\Данные\themes_rus.csv')
+themes = pd.read_csv(r'themes_rus.csv')
 
 
 # In[3]:
@@ -25,7 +25,7 @@ a = themes['Резолюция'].shape[0]
 # In[4]:
 
 
-themes['Резолюция'][random.randint(2153,a)]
+#themes['Резолюция'][random.randint(2153,a)]
 
 
 # Импортируем необходимые модули
