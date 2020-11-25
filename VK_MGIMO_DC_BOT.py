@@ -89,6 +89,13 @@ for event in longpoll.listen():
                 elif event.obj.text == 'Как к нам попасть':
                     mas = 'Презентация нашего клуба состоится совсем скоро!\n\nДля того, чтобы прийти, просто зарегистрируйся:\nhttps://docs.google.com/forms/d/e/1FAIpQLScR3McA4NI5iO1UGW3UOdNFoNcq52oXUY36uxRyN8rpqHiElw/viewform?vc=0&c=0&w=1&flr=0&gxids=7628\n\nБолее подробная информация у нас в группе!'
                     write_message(event.obj.from_id, mas)
+                elif 'дай тему' in event.obj.text.lower():
+                    mas = themes['Резолюция'][random.randint(2153, a)]
+                    write_message(event.obj.from_id, mas)
+                elif event.obj.text != '':
+                    mas = 'Выбери опцию'
+                    write_message(event.obj.from_id, mas)
+
 
 
 # In[ ]:
