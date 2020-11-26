@@ -25,12 +25,6 @@ a = themes['Резолюция'].shape[0]
 # In[4]:
 
 
-#themes['Резолюция'][random.randint(2153,a)]
-
-
-# Импортируем необходимые модули
-
-# In[5]:
 
 
 import json
