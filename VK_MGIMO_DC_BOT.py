@@ -39,7 +39,13 @@ from vk_api.utils import get_random_id
 
 
 # Пишем клавиатуру
-
+def start_event_listener(self):
+    while True:
+        try:
+            for event in self.long_poll.listen():
+                self.dispatcher.did_receive_event(event)
+        except Exception as e:
+            logging.warning("vk_core: long poll exception: {}".format(e))
 # In[6]:
 
 
