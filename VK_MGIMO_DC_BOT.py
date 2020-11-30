@@ -38,14 +38,8 @@ from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 from vk_api.utils import get_random_id
 
 
-# Пишем клавиатуру
-def start_event_listener(self):
-    while True:
-        try:
-            for event in self.long_poll.listen():
-                self.dispatcher.did_receive_event(event)
-        except Exception as e:
-            logging.warning("vk_core: long poll exception: {}".format(e))
+
+
 # In[6]:
 
 
@@ -75,6 +69,14 @@ vk_session = vk_api.VkApi(token="48ffce535d8216c46187da6eaeed6b9e782391faada162d
 vk = vk_session.get_api()
 longpoll = VkBotLongPoll(vk_session, 62336)
 for event in longpoll.listen():
+    class MyVkLongPoll(VkLongPoll):
+        def listen(self):
+            while True:
+                try:
+                    for event in self.check():
+                        yield event
+                except Exception as e:
+                    print('error', e)
     if event.type == VkBotEventType.MESSAGE_NEW:
         if event.obj.text != '': 
             if event.from_user:
@@ -84,7 +86,7 @@ for event in longpoll.listen():
                     mas = themes['Резолюция'][random.randint(2153,a)]
                     write_message(event.obj.from_id, mas)
                 elif event.obj.text == 'Информация о нас':
-                    mas = 'Дебаты - это интеллектуальная ролевая игра, где команды доказывают позицию, выпавшую по жребию!\n\nMGIMO DC является одним из крупнейших клубов дебатов в России!\n\nНаши ребята участвуют в международных чемпионатах, работают в крутых компаниях и путешествуют по всему миру!\n\nЕсли ты хочешь развить навыки критического мышления, научиться делать сильные речи и получить море эмоций, то присоединяйся!'
+                    mas = 'Дебаты - это интеллектуальная ролевая игра, где команды доказывают позицию, выпавшую по жребию\n\nMGIMO DC является одним из крупнейших клубов дебатов в России\n\nНаши ребята участвуют в международных чемпионатах, работают в крутых компаниях и путешествуют по всему миру\n\nЕсли ты хочешь развить навыки критического мышления, научиться делать сильные речи и получить море эмоций, то присоединяйся'
                     write_message(event.obj.from_id, mas)
                 elif event.obj.text == 'Как к нам попасть':
                     mas = 'Презентация нашего клуба состоится совсем скоро!\n\nДля того, чтобы прийти, просто зарегистрируйся:\nhttps://docs.google.com/forms/d/e/1FAIpQLScR3McA4NI5iO1UGW3UOdNFoNcq52oXUY36uxRyN8rpqHiElw/viewform?vc=0&c=0&w=1&flr=0&gxids=7628\n\nБолее подробная информация у нас в группе!'
@@ -99,7 +101,13 @@ for event in longpoll.listen():
 
 
 # In[ ]:
-
+ #   def start_event_listener(self):
+  #      while True:
+   #         try:
+    #            for event in self.long_poll.listen():
+     #               self.dispatcher.did_receive_event(event)
+      #      except Exception as e:
+       #         logging.warning("vk_core: long poll exception: {}".format(e))
 
 
 
