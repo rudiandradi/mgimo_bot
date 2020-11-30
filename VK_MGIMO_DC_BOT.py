@@ -14,13 +14,13 @@ import random
 
 
 themes = pd.read_csv(r'themes_rus.csv')
-
+themes_eng = pd.read_csv(r'themes_eng.csv')
 
 # In[3]:
 
 
 a = themes['Резолюция'].shape[0]
-
+b = themes_eng['Резолюция'].shape[0]
 
 # In[4]:
 
@@ -50,16 +50,27 @@ keyboard.add_button('Как к нам попасть',color=VkKeyboardColor.PRIM
 keyboard.add_line()
 keyboard.add_button('Тема для дебатов',color=VkKeyboardColor.POSITIVE)
 
-
+keyboard2 = VkKeyboard(one_time=True)
+keyboard2.add_button('Русский',color=VkKeyboardColor.PRIMARY)
+keyboard2.add_button('English',color=VkKeyboardColor.PRIMARY)
 # Функция вывода ответа
-
+eng_keyboard = VkKeyboard(one_time=True)
+eng_keyboard.add_button('Information',color=VkKeyboardColor.PRIMARY)
+eng_keyboard.add_line()
+eng_keyboard.add_button('How to join us',color=VkKeyboardColor.PRIMARY)
+eng_keyboard.add_line()
+eng_keyboard.add_button('Theme for debates',color=VkKeyboardColor.POSITIVE)
 # In[7]:
 
 
 def write_message(sender,message):
     vk.messages.send (user_id = sender, message = message, random_id = get_random_id(), keyboard = keyboard.get_keyboard())
 
+def language_keyboard(sender,message):
+    vk.messages.send (user_id = sender, message = message, random_id = get_random_id(), keyboard = keyboard2.get_keyboard())
 
+def keyboard_third(sender,message):
+    vk.messages.send (user_id = sender, message = message, random_id = get_random_id(), keyboard = eng_keyboard.get_keyboard())
 # Тело бота
 
 # In[ ]:
@@ -78,13 +89,20 @@ for event in longpoll.listen():
                 except Exception as e:
                     print('error', e)
     if event.type == VkBotEventType.MESSAGE_NEW:
-        if event.obj.text != '': 
+        if event.obj.text != '':
             if event.from_user:
                 if (event.obj.text == 'Начать') or (event.obj.text == 'Start'):
                     write_message(event.obj.from_id, 'Привет!')
                 elif event.obj.text == 'Тема для дебатов':
-                    mas = themes['Резолюция'][random.randint(2153,a)]
-                    write_message(event.obj.from_id, mas)
+                    mas = 'Выбери язык'
+                    language_keyboard(event.obj.from_id, mas)
+                elif (event.obj.text == 'Русский') or (event.obj.text == 'English'):
+                    if event.obj.text == 'Русский':
+                        mas = themes['Резолюция'][random.randint(2153,a)]
+                        write_message(event.obj.from_id, mas)
+                    elif event.obj.text == 'English':
+                        mas = themes_eng['Резолюция'][random.randint(0,b)]
+                        write_message(event.obj.from_id, mas)
                 elif event.obj.text == 'Информация о нас':
                     mas = 'Дебаты - это интеллектуальная ролевая игра, где команды доказывают позицию, выпавшую по жребию\n\nMGIMO DC является одним из крупнейших клубов дебатов в России\n\nНаши ребята участвуют в международных чемпионатах, работают в крутых компаниях и путешествуют по всему миру\n\nЕсли ты хочешь развить навыки критического мышления, научиться делать сильные речи и получить море эмоций, то присоединяйся'
                     write_message(event.obj.from_id, mas)
@@ -97,7 +115,6 @@ for event in longpoll.listen():
                 elif event.obj.text != '':
                     mas = 'Выбери опцию'
                     write_message(event.obj.from_id, mas)
-
 
 
 # In[ ]:
