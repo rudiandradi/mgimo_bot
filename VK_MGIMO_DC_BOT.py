@@ -77,29 +77,12 @@ def write_message(sender,message):
 # In[ ]:
 
 
-
 vk_session = vk_api.VkApi(token="48ffce535d8216c46187da6eaeed6b9e782391faada162d8299b2ddc24e83ce623d217d438a1db1b42d30")
 vk = vk_session.get_api()
 longpoll = VkBotLongPoll(vk_session, 62336)
+   
 
-class MyVkLongPoll(VkLongPoll):
-    def start_event_listener(self):
-        while True:
-            try:
-                for event in self.long_poll.listen():
-                    self.dispatcher.did_receive_event(event)
-            except Exception as e:
-                logging.warning("vk_core: long poll exception: {}".format(e))
-
-for event in longpoll.listen():
-    # class MyVkLongPoll(VkLongPoll):
-    #     def listen(self):
-    #         while True:
-    #             try:
-    #                 for event in self.check():
-    #                     yield event
-    #             except Exception as e:
-    #                 print('error', e)
+def did_receive_event(event):
     if event.type == VkBotEventType.MESSAGE_NEW:
         if event.obj.text != '':
             if event.from_user:
@@ -125,20 +108,15 @@ for event in longpoll.listen():
                     write_message(event.obj.from_id, mas)
 
 
-# In[ ]:
- #   def start_event_listener(self):
-  #      while True:
-   #         try:
-    #            for event in self.long_poll.listen():
-     #               self.dispatcher.did_receive_event(event)
-      #      except Exception as e:
-       #         logging.warning("vk_core: long poll exception: {}".format(e))
+while True:
+    try:
+        #здесь мы запускаем слушалку сервера.в случае проблемы - try выкидывает исключеник,
+        # мы его ловим, печатаем в консоль и заново переподключаемяс
+        for event in longpoll.listen():
+            did_receive_event(event)
+    except Exception as e:
+        print("vk_core: long poll exception: {}".format(e))
 
 
 
-
-# In[ ]:
-
-
-
-
+# %%
